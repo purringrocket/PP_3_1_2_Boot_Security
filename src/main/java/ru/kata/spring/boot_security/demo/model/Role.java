@@ -35,8 +35,8 @@ public class Role implements GrantedAuthority {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Role role1)) return false;
-        return Objects.equals(getId(), role1.getId()) && Objects.equals(getName(), role1.getName());
+        if (!(o instanceof Role role)) return false;
+        return getId().equals(role.getId()) && getName().equals(role.getName());
     }
 
     @Override

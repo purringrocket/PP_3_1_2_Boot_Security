@@ -56,12 +56,14 @@ public class UserServiceRepoImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
+        user.getAuthorities();
         return user;
     }
 }
