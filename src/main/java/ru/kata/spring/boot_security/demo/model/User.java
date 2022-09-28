@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @Column(name = "password", unique = true, nullable = false)
     private String password;
 
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
     @ManyToMany
     @JoinTable(
             name = "users_roles",
@@ -48,12 +51,12 @@ public class User implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return getId().equals(user.getId()) && getUsername().equals(user.getUsername()) && getPassword().equals(user.getPassword()) && Objects.equals(getRoles(), user.getRoles());
+        return getId().equals(user.getId()) && getUsername().equals(user.getUsername()) && getPassword().equals(user.getPassword()) && getEmail().equals(user.getEmail());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUsername(), getPassword(), getRoles());
+        return Objects.hash(getId(), getUsername(), getPassword(), getEmail());
     }
 
     @Override

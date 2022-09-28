@@ -23,12 +23,10 @@ public class UserServiceRepoImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional(readOnly = true)
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public User findUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
@@ -50,20 +48,12 @@ public class UserServiceRepoImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    @Transactional
-    public void register(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-    }
-
-    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        user.getAuthorities();
         return user;
     }
 }

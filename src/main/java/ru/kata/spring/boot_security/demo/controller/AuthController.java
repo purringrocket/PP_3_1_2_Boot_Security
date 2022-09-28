@@ -36,7 +36,7 @@ public class AuthController {
     @PostMapping("/registration")
     public String registrationApply(@ModelAttribute("user") User user) {
         user.addRole(roleRepository.findByName("USER"));
-        userService.register(user);
+        userService.save(user);
         return "redirect:/auth/login";
     }
 
