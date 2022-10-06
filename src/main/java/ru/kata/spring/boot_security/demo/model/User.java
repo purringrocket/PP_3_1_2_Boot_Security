@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -32,6 +31,15 @@ public class User implements UserDetails {
     @Column(name = "password", unique = true, nullable = false)
     private String password;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "age")
+    private Byte age;
+
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
@@ -51,12 +59,12 @@ public class User implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return getId().equals(user.getId()) && getUsername().equals(user.getUsername()) && getPassword().equals(user.getPassword()) && getEmail().equals(user.getEmail());
+        return Objects.equals(getAge(), user.getAge()) && getId().equals(user.getId()) && getUsername().equals(user.getUsername()) && getPassword().equals(user.getPassword()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getRoles(), user.getRoles());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getUsername(), getPassword(), getEmail());
+        return Objects.hash(getId(), getUsername(), getPassword(), getFirstName(), getLastName(), getAge(), getEmail(), getRoles());
     }
 
     @Override

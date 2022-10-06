@@ -1,59 +1,45 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import javax.validation.Valid;
-import java.util.Arrays;
-
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("admin")
 public class AdminController {
 
-    private UserService userService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping()
-    public String index(Model model) {
-        System.out.println(Arrays.toString(userService.findAll().toArray()));
-        model.addAttribute("users", userService.findAll());
-        return "admin/index";
-    }
-
-    @GetMapping("/{id}")
-    public String profile(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.findUserById(id));
-        return "admin/userProfile";
-    }
-
-    @GetMapping("/newUser")
-    public String newUser(@ModelAttribute("user") User user) {
-        return "admin/newUser";
+    public String index(Model model, @AuthenticationPrincipal User user, @ModelAttribute User newUser) {
+        model.addAttribute("thisUser", user);
+        model.addAttribute("allUsers", userService.findAll());
+        model.addAttribute("rolesAvailable", roleService.findAllRoles());
+        model.addAttribute("newUser", newUser);
+        return "admin";
     }
 
     @PostMapping
-    public String create(@ModelAttribute("user") @Valid User user) {
+    public String create(@ModelAttribute("newUser") User user) {
         userService.save(user);
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.findUserById(id));
-        return "admin/edit";
-    }
-
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("user") User user) {
-           userService.update(user.getId(), user);
+        userService.update(user.getId(), user);
         return "redirect:/admin";
     }
 

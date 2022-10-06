@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
@@ -15,12 +15,12 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 public class AuthController {
 
     private final UserService userService;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
     @Autowired
-    public AuthController(UserService userService, RoleRepository roleRepository) {
+    public AuthController(UserService userService, RoleService roleService) {
         this.userService = userService;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
     }
 
     @GetMapping("/login")
@@ -35,7 +35,7 @@ public class AuthController {
 
     @PostMapping("/registration")
     public String registrationApply(@ModelAttribute("user") User user) {
-        user.addRole(roleRepository.findByName("USER"));
+        user.addRole(roleService.findByName("USER"));
         userService.save(user);
         return "redirect:/auth/login";
     }
