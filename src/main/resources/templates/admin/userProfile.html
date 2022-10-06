@@ -13,7 +13,6 @@
     <p th:text="'Id: ' + ${user.getId()}">User id</p>
     <p th:text="'Username: ' + ${user.getUsername()}">Username</p>
     <hr>
-<!--    <a th:href="@{/user/{id}/edit(id=${user.getId()})}">Edit</a>-->
     <div style="display: flex;">
     <form th:action="@{/admin/{id}/edit(id=${user.getId()})}">
         <input type="submit" value="Edit" style="height:22px; width:80px" />
@@ -22,7 +21,6 @@
         <input type="submit" value="Delete" style="height:22px; width:80px" />
     </form>
     </div>
-
     <form th:action="@{/logout}" th:method="POST">
         <input type="submit" value="Logout" />
     </form>

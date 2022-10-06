@@ -11,12 +11,10 @@
     <form th:method="POST" th:action="@{/admin}" th:object="${user}">
         <label for="name">Enter a name: </label>
         <input type="text" th:field="*{username}" id="name"/>
-<!--        <div style="color:red" th:if="${#fields.hasErrors('name')}" th:errors="*{username}">Name error</div>-->
         <br/>
 
         <label for="password">Enter a password: </label>
         <input type="text" th:field="*{password}" id="password"/>
-<!--        <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{password}">Password error</div>-->
         <br/>
         <input type="submit" value="Add" style="height:22px; width:80px"/>
     </form>
