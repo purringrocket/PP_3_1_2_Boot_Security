@@ -27,16 +27,16 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
                         .antMatchers("/css/**", "/js/**").permitAll()
-                        .antMatchers("/admin").hasAuthority("ROLE_ADMIN")
-                        .antMatchers("/user").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .antMatchers("/admin").hasRole("ADMIN")
+                        .antMatchers("/user").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
-                        .loginPage("/auth/login")
+                        .loginPage("/login")
                         .permitAll()
                         .loginProcessingUrl("/process_login")
                         .successHandler(successUserHandler)
-                        .failureUrl("/auth/login?error")
+                        .failureUrl("/login?error")
                 )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")

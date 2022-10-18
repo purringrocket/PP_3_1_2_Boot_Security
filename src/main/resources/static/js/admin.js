@@ -1,12 +1,50 @@
-let url = "/rest/admin/users/"
+const url = "/rest/admin/users/"
+const dbRoles = [
+    {id: 1, name: "ROLE_USER"},
+    {id: 2, name: "ROLE_ADMIN"}
+]
 
 document.getElementById("addNewUserButton").addEventListener("click", addNewUser)
 document.getElementById("users-tab-button").addEventListener("click", makeUsersTable)
 
-makeUsersTable().then(r => console.log(r))
+makeAdminView().then()
+makeUsersTable().then()
+
+async function makeAdminView() {
+    const navbarUserInfo = document.getElementById('navbarUserInfo')
+    const newUserRolesSelect = document.getElementById('newUserRolesSelect')
+    dbRoles.forEach(role => {
+        newUserRolesSelect.innerHTML += `<option value="${role.id}">${role.name}</option>>`
+    })
+
+    let response = await fetch('/rest/user')
+    if (response.ok) {
+        await response.json()
+            .then(userJson => {
+                let roles = ''
+                userJson.roles.forEach(role => roles += role.name.substring(5) + " ")
+
+                navbarUserInfo.innerHTML = `
+                    <span class="fw-bold">${userJson.username}</span>
+                    &nbsp with roles: &nbsp
+                    <span>${roles}</span>
+                    <span class="me-auto"></span>
+                    <form action="/logout" method="POST">
+                        <a onclick="this.closest('form').submit();return false;" class="nav-link" role="button">Logout</a>
+                        <input type="submit" hidden/>
+                    </form>`
+
+                if (roles.includes('ADMIN')) {
+                    sidebarAdminButton.innerHTML = `
+                    <a class="nav-link" href="/admin">Admin</a>`
+                }
+            })
+    } else {
+        alert("Response status: " + response.status)
+    }
+}
 
 async function makeUsersTable() {
-    console.log('makeUsersTable')
     let response = await fetch(url)
     if (response.ok) {
         document.getElementById('usersInfoTable').innerHTML = ''
@@ -14,9 +52,9 @@ async function makeUsersTable() {
         response.json()
             .then(usersJson => {
                 usersJson.forEach(user => {
-                    //console.log(user)
                     let roles = ''
                     user.roles.forEach(role => roles += role.name.substring(5) + " ")
+
                     usersTableHtml = `
                         <td>${user.id}</td>
                         <td>${user.firstName}</td>
@@ -30,7 +68,6 @@ async function makeUsersTable() {
                         <td>                            
                             <button class="btn btn-danger" type="button" id='deleteButton${user.id}' data-bs-toggle="modal" data-bs-target="#modalTemplate">Delete</button>
                         </td>`
-                    // document.getElementById('editButton' + user.id).addEventListener('click', )
                     let trNode = document.createElement("tr")
                     trNode.innerHTML = usersTableHtml
                     document.getElementById('usersInfoTable').append(trNode)
@@ -47,13 +84,9 @@ async function makeUsersTable() {
     }
 }
 
-const dbRoles = [
-    {id: 1, name: "ROLE_USER"},
-    {id: 2, name: "ROLE_ADMIN"}
-]
+
 
 function addNewUser() {
-    console.log('addNewUser 1')
     let username = document.getElementById("newUserUsername").value
     let password = document.getElementById("newUserPassword").value
     let firstName = document.getElementById("newUserFirstName").value
@@ -123,12 +156,13 @@ async function makeModalForUserDeletion(userId) {
                 <label class="form-label fw-bold pt-3" for="rolesSelectDel">Roles</label>
                 <select class="form-select form-select-sm" id="rolesSelectDel" multiple disabled>
                     <option value="${dbRoles[0].id}">${dbRoles[0].name}</option>>
-                    <option value="${dbRoles[1].id}">${dbRoles[1].name}</option>>                
+                    <option value="${dbRoles[1].id}">${dbRoles[1].name}</option>>
                 </select>`
 
             modalBottomButtons.innerHTML = `
                 <a class="btn btn-light" data-bs-dismiss="modal" role="button">Close</a>
                 <a class="btn btn-danger" id="modalDeleteButton" data-bs-dismiss="modal" role="button">Delete</a>`
+
             document.getElementById('modalDeleteButton').addEventListener('click', function () {
                 deleteUserById(userJson.id)
             })
@@ -140,7 +174,7 @@ async function makeModalForUserDeletion(userId) {
 }
 
 async function deleteUserById(userId) {
-    await fetch(url + userId,{
+    await fetch(url + userId, {
         method: 'DELETE'
     })
         .then(r => alert('User with id:' + userId + ' deleted' + r))

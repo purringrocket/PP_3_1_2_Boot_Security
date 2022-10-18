@@ -15,7 +15,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 @RestController
 @RequestMapping("/rest/user")
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class UserRestController {
 
     private final ModelMapper modelMapper;
