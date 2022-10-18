@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User page</title>
-    <!--Bootstrap local refs-->
-    <link type="text/css" href="/css/bootstrap.min.css" rel="stylesheet">
-    <link type="text/css" href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <!--Bootstrap css local ref-->
+    <link type="text/css" th:href="@{/css/bootstrap.min.css}" href="../static/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <style>
@@ -35,7 +34,7 @@
     <div class="col-1 p-2" style="width: 12%">
         <ul class="nav nav-pills flex-column">
             <li class="nav-item">
-                <a class="nav-link" th:if="isAdmin" th:href="@{/admin}" aria-current="page">Admin</a>
+                <a class="nav-link" th:if="${isAdmin}" th:href="@{/admin}" aria-current="page">Admin</a>
             </li>
             <li>
                 <a class="nav-link active" th:href="@{/user}" aria-current="page">User</a>
@@ -63,24 +62,16 @@
                         <th scope="col">Roles</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="user : ${user}">
-                        <td th:text="${user.getId()}"></td>
-                        <td th:text="${user.getFirstName()}"></td>
-                        <td th:text="${user.getLastName()}"></td>
-                        <td th:text="${user.getAge()}"></td>
-                        <td th:text="${user.getEmail()}"></td>
-                        <td><span th:each="role : ${user.getAuthorities()}"
-                                  th:text="${role.getAuthority()} + ' '"></span></td>
-                    </tr>
+                    <tbody id="userInfo">
+
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}" src="../static/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" th:src="@{/js/user.js}"></script>
 
-
-<script src="../static/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
